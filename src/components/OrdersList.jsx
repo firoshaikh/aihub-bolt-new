@@ -1,25 +1,20 @@
 import { useState, useEffect } from 'react';
 
-function OrdersList({ token }) {
+function OrdersList() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     fetchOrders();
-  }, [token]);
+  }, []);
 
   const fetchOrders = async () => {
     setLoading(true);
     setError('');
 
     try {
-      const response = await fetch('/api/orders', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
+      const response = await fetch('/api/orders');
       const data = await response.json();
 
       if (!response.ok) {
@@ -74,7 +69,7 @@ function OrdersList({ token }) {
               {orders.map((order) => (
                 <tr key={order.id}>
                   <td>#{order.id}</td>
-                  <td>${parseFloat(order.amount).toFixed(2)}</td>
+                  <td>${parseFloat(order.amount || 0).toFixed(2)}</td>
                   <td>{new Date(order.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
